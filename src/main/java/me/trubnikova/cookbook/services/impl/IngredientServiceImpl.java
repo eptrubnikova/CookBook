@@ -4,7 +4,6 @@ import me.trubnikova.cookbook.model.Ingredient;
 import me.trubnikova.cookbook.services.IngredientService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,9 +19,9 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient getIngredient(int lastId) {
-        if (ingredients.containsKey(lastId)) {
-            System.out.println(ingredients.get(lastId));
-        } return ingredients.get(lastId);
+    public Ingredient getIngredient(int id) {
+        if (!ingredients.containsKey(id)) {
+            System.out.println("Рецепт с данным номером не найден");
+        } return ingredients.get(id);
     }
 }

@@ -20,4 +20,12 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.addRecipe(recipe));
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
+        Recipe result = recipeService.getRecipe(id);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
 }

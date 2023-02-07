@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 public class Recipe {
 
-    private static String nameRecipe;
+    private String nameRecipe;
     private Integer cookingTime;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<String> cookingMethod;
