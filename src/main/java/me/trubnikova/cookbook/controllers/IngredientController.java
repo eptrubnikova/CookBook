@@ -29,4 +29,27 @@ public class IngredientController {
         }
         return ResponseEntity.ok(result);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ingredient> editIngredient(@PathVariable int id, @RequestBody Ingredient ingredient) {
+        Ingredient result = ingredientService.editIngredient(id, ingredient);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteIngredient(@PathVariable int id) {
+        if (ingredientService.deleteIngredient(id)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllIngredient() {
+        ingredientService.deleteAllIngredient();
+        return ResponseEntity.ok().build();
+    }
 }

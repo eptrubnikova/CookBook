@@ -13,15 +13,41 @@ public class IngredientServiceImpl implements IngredientService {
     private static Map<Integer, Ingredient> ingredients = new LinkedHashMap<>();
 
     @Override
-    public int addIngredient(Ingredient ingredient) {
+    public Ingredient addIngredient(Ingredient ingredient) {
         ingredients.put(ingredient.getId(), ingredient);
-        return ingredient.getId();
+        return ingredient;
     }
+
+    @Override
+    public Ingredient editIngredient(int id, Ingredient ingredient) {
+        if (ingredients.containsKey(id)) {
+            ingredients.put(id, ingredient);
+            return ingredient;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteIngredient(int id) {
+        if (ingredients.containsKey(id)) {
+            ingredients.remove(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteAllIngredient() {
+        ingredients = new LinkedHashMap<>();
+    }
+
+
 
     @Override
     public Ingredient getIngredient(int id) {
         if (!ingredients.containsKey(id)) {
             System.out.println("Рецепт с данным номером не найден");
-        } return ingredients.get(id);
+        }
+        return ingredients.get(id);
     }
 }

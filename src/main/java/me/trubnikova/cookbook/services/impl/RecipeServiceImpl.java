@@ -25,4 +25,27 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return recipes.get(id);
     }
+
+    @Override
+    public Recipe editRecipe(Integer id, Recipe recipe) {
+        if (recipes.containsKey(id)) {
+            recipes.put(id, recipe);
+            return recipe;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteRecipe(Integer id) {
+        if (recipes.containsKey(id)) {
+            recipes.remove(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteAllRecipe() {
+        recipes = new LinkedHashMap<>();
+    }
 }
