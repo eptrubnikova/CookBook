@@ -1,9 +1,11 @@
 package me.trubnikova.cookbook.validate;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Validate {
 
     public static String validateValue(String value) throws InvalidInputException{
-        if (value == null || value.isEmpty() || value.isBlank()){
+        if (StringUtils.isBlank(value)){
             throw new InvalidInputException("Проверьте корректность ввода данных");
         }else {
             return value;
