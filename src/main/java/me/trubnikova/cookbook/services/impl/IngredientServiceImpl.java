@@ -1,16 +1,30 @@
 package me.trubnikova.cookbook.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.trubnikova.cookbook.model.Ingredient;
 import me.trubnikova.cookbook.services.IngredientService;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.annotation.PostConstruct;
+import java.util.TreeMap;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
-    private static Map<Integer, Ingredient> ingredients = new LinkedHashMap<>();
+    final private IngredientFileServiceImpl fileService;
+    private static TreeMap<Integer, Ingredient> ingredients = new TreeMap<>();
+
+    public IngredientServiceImpl(IngredientFileServiceImpl fileService) {
+        this.fileService = fileService;
+    }
+
+
+    @PostConstruct
+    private void init() {
+        readFromFile();
+    }
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
@@ -38,9 +52,8 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void deleteAllIngredient() {
-        ingredients = new LinkedHashMap<>();
+        ingredients = new TreeMap<>();
     }
-
 
 
     @Override
@@ -49,5 +62,24 @@ public class IngredientServiceImpl implements IngredientService {
             System.out.println("Рецепт с данным номером не найден");
         }
         return ingredients.get(id);
+    }
+
+    private void saveToFile() {
+        try {
+            String json = new ObjectMapper().writeValueAsString(ingredients);
+            fileService.saveToFile(json);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void readFromFile() {
+        try {
+            String json = fileService.readFromFile();
+            ingredients = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Integer, Ingredient>>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
