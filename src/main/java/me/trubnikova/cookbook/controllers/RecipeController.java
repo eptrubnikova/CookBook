@@ -34,7 +34,7 @@ public class RecipeController {
             @Parameter(name = "id", example = "1")
     })
     public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
-        Recipe result = recipeService.getRecipe(id);
+        Recipe result = recipeService.getRecipe((long) id);
         if (result == null) {
             return ResponseEntity.notFound().build();
         }
@@ -51,7 +51,7 @@ public class RecipeController {
             @Parameter(name = "recipe", example = "солянка")
     })
     public ResponseEntity<Recipe> editRecipe(@PathVariable int id, @RequestBody Recipe recipe) {
-        Recipe result = recipeService.editRecipe(id, recipe);
+        Recipe result = recipeService.editRecipe((long) id, recipe);
         if (result == null) {
             return ResponseEntity.notFound().build();
         }
@@ -67,7 +67,7 @@ public class RecipeController {
             @Parameter(name = "id", example = "1")
     })
     public ResponseEntity<Void> deleteRecipe(@PathVariable int id) {
-        if (recipeService.deleteRecipe(id)) {
+        if (recipeService.deleteRecipe((long) id)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

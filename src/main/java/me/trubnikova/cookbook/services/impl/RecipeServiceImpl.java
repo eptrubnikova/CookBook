@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.trubnikova.cookbook.model.Recipe;
+import me.trubnikova.cookbook.services.FileService;
 import me.trubnikova.cookbook.services.RecipeService;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,10 @@ import java.util.*;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    final private RecipeFileServiceImpl fileService;
+    final private FileService fileService;
 
-    private static TreeMap<Integer, Recipe> recipes = new TreeMap<>();
-    private static Integer id = 0;
+    private static Map<Long, Recipe> recipes = new LinkedHashMap<>();
+    private static long id = 0;
 
     public RecipeServiceImpl(RecipeFileServiceImpl fileService) {
         this.fileService = fileService;
@@ -34,7 +35,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe getRecipe(Integer id) {
+    public Recipe getRecipe(Long id) {
         if (!recipes.containsKey(id)) {
             System.out.println("Рецепт с данным номером не найден");
         }
@@ -42,7 +43,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe editRecipe(Integer id, Recipe recipe) {
+    public Recipe editRecipe(Long id, Recipe recipe) {
         if (recipes.containsKey(id)) {
             recipes.put(id, recipe);
             return recipe;
@@ -51,7 +52,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public boolean deleteRecipe(Integer id) {
+    public boolean deleteRecipe(Long id) {
         if (recipes.containsKey(id)) {
             recipes.remove(id);
             return true;
@@ -76,10 +77,12 @@ public class RecipeServiceImpl implements RecipeService {
     private void readFromFile() {
         try {
             String json = fileService.readFromFile();
-            recipes = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Integer, Recipe>>() {
+            recipes = new ObjectMapper().readValue(json, new TypeReference<Map<Long, Recipe>>() {
             });
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
+
+
 }
