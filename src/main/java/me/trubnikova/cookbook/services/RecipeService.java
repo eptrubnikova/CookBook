@@ -6,11 +6,11 @@ public interface RecipeService {
 
     Recipe addRecipe(Recipe recipe);
 
-    Recipe getRecipe(Integer lastId);
+    Recipe getRecipe(Long lastId);
 
-    Recipe editRecipe(Integer id, Recipe recipe);
+    Recipe editRecipe(Long id, Recipe recipe);
 
-    boolean deleteRecipe(Integer id);
+    boolean deleteRecipe(Long id);
 
     void deleteAllRecipe();
 }
