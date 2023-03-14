@@ -1,6 +1,8 @@
 package me.trubnikova.cookbook.services;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 public interface FileService {
@@ -13,4 +15,5 @@ public interface FileService {
     Path createTempFile(String suffix);
 
     boolean cleanDataFile();
+
 }
