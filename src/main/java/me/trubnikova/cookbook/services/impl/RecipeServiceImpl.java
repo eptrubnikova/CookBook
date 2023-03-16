@@ -4,11 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.trubnikova.cookbook.model.Recipe;
+import me.trubnikova.cookbook.services.Exception.ReadRecipeException;
+import me.trubnikova.cookbook.services.Exception.RecipeNotFoundException;
 import me.trubnikova.cookbook.services.FileService;
 import me.trubnikova.cookbook.services.RecipeService;
+import me.trubnikova.cookbook.validate.InvalidInputException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 @Service
@@ -80,9 +88,35 @@ public class RecipeServiceImpl implements RecipeService {
             recipes = new ObjectMapper().readValue(json, new TypeReference<Map<Long, Recipe>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new ReadRecipeException();
         }
     }
 
+    @Override
+    public void addRecipesFromInputStream(InputStream inputStream) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] array = StringUtils.split(line, '|');
+                Recipe recipe = new Recipe(array[0], Integer.valueOf(array[1]), array[2]);
+                addRecipe(recipe);
+            }
+
+        }
+    }
+
+    @Override
+    public File createRecipesTxtFile() {
+        Path path = fileService.createTempFile("Рецепты");
+        try (Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)){
+            for (Recipe recipe : recipes.values()) {
+                writer.append(recipe.toString());
+                writer.append("\n");
+            }
+        } catch (IOException e) {
+            throw new RecipeNotFoundException();
+        }
+        return path.toFile();
+    }
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.trubnikova.cookbook.model.Ingredient;
+import me.trubnikova.cookbook.services.Exception.ReadIngredientException;
 import me.trubnikova.cookbook.services.IngredientService;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +91,7 @@ public class IngredientServiceImpl implements IngredientService {
             ingredients = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Long, Ingredient>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new ReadIngredientException();
         }
     }
 }
